@@ -12,7 +12,7 @@ var svg = d3.select('svg')
     .attr("width", svgWidth)
     .attr("height", svgHeight);
     
-var barChart = svg.selectAll("rect")
+var barChart = svg.selectAll("  ")
     .data(dataset)
     .enter()
     .append("rect")
