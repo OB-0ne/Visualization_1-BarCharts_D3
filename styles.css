@@ -1,0 +1,28 @@
+body {
+    background-color: lightgrey;
+    margin: 5px auto;
+    width: 1200px;
+}
+
+#Header {
+    height: 80px;
+    border-radius: 20px;
+    background-color: white;
+    padding: 5px;
+    margin: 5px;
+}
+
+#VisualBod {
+    border-radius: 20px;
+    background-color: white;
+    padding: 5px;
+    margin: 5px;
+}
+
+#ControlPanel {
+
+}
+
+#Charts {
+    margin: 5px auto;
+}
