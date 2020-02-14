@@ -1,31 +1,35 @@
 
 
-function renderGraph(data){
+function renderGraph(attr){
 
     //Get the current selected attribute - [CHANGE]
-    var attribute = "last";
 
     var svgWidth = 750;
     var svgHeight = 450;
     var barWidth = (svgWidth / data.length);
 
-    console.log(data.length);
-    console.log(barWidth);
+    console.log(d3.max(data.map(d => +d[attr])));
+
+    var yScale = d3.scaleLinear()
+        .domain([0, d3.max(data.map(d => +d[attr]))])
+        .range([0, svgHeight]);
 
     //Get the svg graph
     var svg = d3.select('svg')
         .attr("width", svgWidth)
         .attr("height", svgHeight);
+
+    d3.selectAll("rect").remove();
         
     var barChart = svg.selectAll("rect")
         .data(data)
         .enter()
         .append("rect")
         .attr("y", function(d) {
-            return svgHeight - d[attribute]; 
+            return svgHeight - yScale(d[attr]); 
         })
         .attr("height", function(d) { 
-            return d[attribute]; 
+            return yScale(d[attr]); 
         })
         .attr("width", barWidth - 5)
         .attr("transform", function (d,i) {
@@ -35,9 +39,13 @@ function renderGraph(data){
 
 };
 
+var data;
+
 //Read data from Csv
-d3.csv("data/sample-small.csv", function(data){
-    renderGraph(data);
+d3.csv("data/sample-small.csv", function(d){
+    data = d;
+    renderGraph("last");
+    makeDDM();
 });
 
 

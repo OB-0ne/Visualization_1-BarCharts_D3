@@ -20,9 +20,12 @@ body {
 }
 
 #ControlPanel {
-
+    margin: 5px auto;
+    width: 200px;
 }
 
 #Charts {
     margin: 5px auto;
+    width: 750px;
+    height: 450px;
 }
