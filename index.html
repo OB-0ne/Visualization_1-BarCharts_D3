@@ -12,17 +12,23 @@
 
         <div id="ControlPanel">
             
+            <label for="graph-attribute">Data Attribute:</label>
+
+            <select id="graph-attribute">
+                <script src="script/makeDDM.js"></script>
+            </select> 
+
         </div>
 
         <div id = "Charts">
-            <svg></svg>
+            <svg id = "graph-num"></svg>
+            <svg id = "graph-cat"></svg>
         </div>
-
-        <div id="test"></div>
 
     </div>
 
-    <!-- <script src="barchart-example.js"></script> -->
-    <script src="read-data.js"></script>
+    <!-- <script src="scripts/barchart-example.js"></script> -->
+    <!--<script src="scripts/read-data.js"></script>-->
+    <script src="scripts/update_graph.js"></script>
 
 </body>

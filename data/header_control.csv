@@ -1,0 +1,24 @@
+﻿Header,DDM Name,Type
+mktcap,,Num
+last,,Num
+d1-open,,Num
+d1-high,,Num
+d1-low,,Num
+d1-close,,Num
+d1-change,,Num
+d2-open,,Num
+d2-high,,Num
+d2-low,,Num
+d2-close,,Num
+d2-change,,Num
+d3-open,,Num
+d3-high,,Num
+d3-low,,Num
+d3-close,,Num
+d3-change,,Num
+Upopen,,Num
+Uphigh,,Num
+Uplow,,Num
+Upclose,,Num
+Upchange,,Num
+Upday,,Num
