@@ -1,6 +1,7 @@
 ﻿Header,DDMName,Type
-mktcap,MKTCAP,Num
 last,LAST,Num
+CateData,CATEDATA,Cate
+HistData,HISTDATA,Num
 d1-open,D1-OPEN,Num
 d1-high,D1-HIGH,Num
 d1-low,D1-LOW,Num

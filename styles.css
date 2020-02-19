@@ -25,7 +25,26 @@ body {
 }
 
 #Charts {
-    margin: 5px auto;
-    width: 750px;
-    height: 450px;
+    margin: 10px auto;
+    padding: 5px;
+}
+
+#graph-num{
+    margin: 10px auto;
+}
+
+#graph-cat{
+    margin: 10px auto;
+}
+
+.bar{
+    fill: steelblue;
+    padding: 2px;
+    z-index: 10;
+}
+
+.hov_bar{
+    fill: chocolate;
+    border: cornflowerblue 1px solid;
+    z-index: 100;
 }
