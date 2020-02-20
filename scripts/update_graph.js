@@ -1,6 +1,6 @@
 var svgWidth = 1120;
-var svgHeight = 500;
-var padding = 60;
+var svgHeight = 630;
+var padding = 55;
 var barPad = 3;
 
 var bin_domain;
@@ -14,8 +14,8 @@ var oldY;
 var inEvent;
 
 var dataset_name = "data/NYC_saf_noconsent_2019.csv";
-var default_attribute = "HistData";
-var default_attribute_type = "Num";
+var default_attribute = "MONTH2";
+var default_attribute_type = "Cate";
 
 var data;
 var curr_var_type = default_attribute_type;
@@ -32,9 +32,10 @@ function setChartInfo(){
 }
 
 function makeCategoricalGraph(attr){
+    
 
     var data = makeCountDict(attr);
-
+    
     //getting the max and minimum of the data column
     var x_domain = (data.map(function(d){ return d.key;})),
     y_domain = [d3.max(data.map(function(d){ return d.value;})),0];
@@ -78,8 +79,15 @@ function makeCategoricalGraph(attr){
 
     // add the x Axis
     svg.append("g")
+        //.attr("transform", "translate(0," + (svgHeight - padding) + ")")
         .attr("transform", "translate(0," + (svgHeight - padding) + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x))
+        .selectAll("text")	
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-20)");
+    
     
     // add the y Axis
     svg.append("g")
@@ -87,10 +95,15 @@ function makeCategoricalGraph(attr){
         .call(d3.axisLeft(y));    
 
     // add a x Axis Title
-    svg.append("text")             
-      .attr("transform","translate(" + (svgWidth/2) + " ," + (svgHeight - 20) + ")")
-      .style("text-anchor", "middle")
-      .text("Values");
+    d3.select("#g_xtitle")
+        .style("text-anchor", "middle")
+        .text("Category Names");
+
+    // add a Y Axis Title
+    svg.append("g")
+        .append("text")
+        .attr("transform", "translate(17," + svgHeight/2 + ")rotate(-90)")
+        .text("Frequency");    
     
 }
 
@@ -113,8 +126,6 @@ function makeNumericalGraph(attr){
         //.thresholds(x.ticks(bin_size));
     
     var bins = histogram(bin_data);
-
-    console.log(bin_size,bins);
 
     //getting the max and minimum of the data column
     y_domain = [0,d3.max(bins.map(function(d){ return d.length;}))];
@@ -159,10 +170,17 @@ function makeNumericalGraph(attr){
         .call(d3.axisLeft(y));    
 
     // add a x Axis Title
-    svg.append("g").append("text")             
-        .attr("transform","translate(" + (svgWidth/2) + " ," + (svgHeight - 20) + ")")
+    d3.select("#g_xtitle")
         .style("text-anchor", "middle")
-        .text("Values");
+        .text("Bin Sizes");
+
+    // add a Y Axis Title
+    svg.append("g")
+        .append("text")
+        .attr("transform", "translate(17," + svgHeight/2 + ")rotate(-90)")
+        .text("Frequency");  
+
+    d3.select("#g_nsize").text("n-size: "+bin_data.length);
     
 }
 
@@ -231,10 +249,7 @@ function mousedown(){
             if (bin_size > 2){
                 var x = d3.event.pageX;
 
-                console.log(click_X,x,click_X - x,Math.floor(Math.abs((click_X - x)/pixLimit)),Math.floor((click_X - x)/pixLimit));
-
                 if(Math.floor(Math.abs((click_X - x)/pixLimit))!=0){
-                    console.log("enter");
                     bin_size = bin_size - Math.floor((click_X - x)/pixLimit);
                     makeNumericalGraph(curr_attr);
                     click_X = d3.event.pageX;
@@ -295,10 +310,27 @@ function mousemove(d) {
 
 function makeCountDict(attr){
 
+    var data_loc = data;
+
+    /*console.log(attr)
+    console.log(data_loc)
+
+    if (attr == "SUSPECT_OTHER_DESCRIPTION_TOP10" || attr == "DEMEANOR_OF_PERSON_STOPPED_TOP10"){
+        console.log("enter")
+        data_loc = function(data, attr) {
+            return data.filter(function(d) { return d[attr] != "NONE"; });
+        }
+    }
+
+    console.log(data_loc)*/
+
     var data_count= d3.nest()
         .key(function(d) {return d[attr];})
         .rollup(function(d) {return d.length;})
         .entries(data);
+
+    
+    d3.select("#g_nsize").text("n-size: "+data.length);
 
     return data_count
 

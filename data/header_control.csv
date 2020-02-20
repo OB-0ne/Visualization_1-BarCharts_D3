@@ -1,17 +1,17 @@
-﻿Header,DDMName,Type
-STOP_FRISK_DATE_DAYNO,Incident Date - Day No,Num
-STOP_FRISK_TIME_DAYMIN,Incident Time - Day Min,Num
-MONTH2,Incident Month,Cate
-DAY2,Incident Day,Cate
-ISSUING_OFFICER_RANK,Officer Rank,Cate
-OBSERVED_DURATION_MINUTES,Observation Time,Num
-SUSPECTED_CRIME_DESCRIPTION_EDITED,Suspected Crime,Cate
-STOP_DURATION_MINUTES,Stopping Time,Num
-SUSPECT_ARREST_OFFENSE_EDITED,Arrest Offense,Cate
-DEMEANOR_OF_PERSON_STOPPED,Demeanor of Suspect,Cate
-SUSPECT_REPORTED_AGE,Suspect Age,Num
-SUSPECT_RACE_DESCRIPTION,Suspect Race,Cate
-SUSPECT_HEIGHT,Suspect Height,Num
-SUSPECT_WEIGHT,Suspect Weight,Num
-SUSPECT_OTHER_DESCRIPTION,Top 10 Used Description,Cate
-STOP_LOCATION_BORO_NAME,Incident Location,Cate
+﻿Header,DDMName,Type,FETitle
+MONTH2,Incident Month,Cate,Incidents by the Month Name in 2019
+DAY2,Incident Day,Cate,Incidents by the Day Name
+STOP_FRISK_DATE_DAYNO,Incident Date - Day No,Num,Incidents by the nth day of the 2019
+STOP_FRISK_TIME_DAYMIN,Incident Time - Day Minute,Num,Incidents by the minute of the day
+ISSUING_OFFICER_RANK,Officer Rank,Cate,Rank of the Issuing Officer
+OBSERVED_DURATION_MINUTES_EDITED,Observation Time,Num,Time for which the suspect was observed (mins)
+STOP_DURATION_MINUTES_EDITED,Stopping Time,Num,Time for which the suspect was stopped (mins)
+SUSPECTED_CRIME_DESCRIPTION_EDITED,Suspected Crime,Cate,Suspected Crime of the suspect during incident
+SUSPECT_ARREST_OFFENSE_EDITED,Arrest Offense,Cate,Offence charged to the suspect on arrest
+DEMEANOR_OF_PERSON_STOPPED_TOP10,Demeanor of Suspect,Cate,Top 10 Suspect's demeanor during the stop
+SUSPECT_REPORTED_AGE,Suspect Age,Num,Age of the Suspects
+SUSPECT_RACE_DESCRIPTION,Suspect Race,Cate,Race of the Suspects
+SUSPECT_HEIGHT_EDITED,Suspect Height (cms),Num,Height of the Suspects
+SUSPECT_WEIGHT,Suspect Weight (lbs),Num,Weight of the Suspects
+SUSPECT_OTHER_DESCRIPTION_TOP10,Top 10 Used Description,Cate,Top 10 Descriptions about Suspects
+STOP_LOCATION_BORO_NAME,Incident Location,Cate,Location of the incident
