@@ -1,25 +1,17 @@
 ﻿Header,DDMName,Type
-last,LAST,Num
-CateData,CATEDATA,Cate
-HistData,HISTDATA,Num
-d1-open,D1-OPEN,Num
-d1-high,D1-HIGH,Num
-d1-low,D1-LOW,Num
-d1-close,D1-CLOSE,Num
-d1-change,D1-CHANGE,Num
-d2-open,D2-OPEN,Num
-d2-high,D2-HIGH,Num
-d2-low,D2-LOW,Num
-d2-close,D2-CLOSE,Num
-d2-change,D2-CHANGE,Num
-d3-open,D3-OPEN,Num
-d3-high,D3-HIGH,Num
-d3-low,D3-LOW,Num
-d3-close,D3-CLOSE,Num
-d3-change,D3-CHANGE,Num
-Upopen,UPOPEN,Num
-Uphigh,UPHIGH,Num
-Uplow,UPLOW,Num
-Upclose,UPCLOSE,Num
-Upchange,UPCHANGE,Num
-Upday,UPDAY,Num
+STOP_FRISK_DATE_DAYNO,Incident Date - Day No,Num
+STOP_FRISK_TIME_DAYMIN,Incident Time - Day Min,Num
+MONTH2,Incident Month,Cate
+DAY2,Incident Day,Cate
+ISSUING_OFFICER_RANK,Officer Rank,Cate
+OBSERVED_DURATION_MINUTES,Observation Time,Num
+SUSPECTED_CRIME_DESCRIPTION_EDITED,Suspected Crime,Cate
+STOP_DURATION_MINUTES,Stopping Time,Num
+SUSPECT_ARREST_OFFENSE_EDITED,Arrest Offense,Cate
+DEMEANOR_OF_PERSON_STOPPED,Demeanor of Suspect,Cate
+SUSPECT_REPORTED_AGE,Suspect Age,Num
+SUSPECT_RACE_DESCRIPTION,Suspect Race,Cate
+SUSPECT_HEIGHT,Suspect Height,Num
+SUSPECT_WEIGHT,Suspect Weight,Num
+SUSPECT_OTHER_DESCRIPTION,Top 10 Used Description,Cate
+STOP_LOCATION_BORO_NAME,Incident Location,Cate

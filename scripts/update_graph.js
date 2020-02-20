@@ -1,16 +1,25 @@
-var svgWidth = 950;
+var svgWidth = 1120;
 var svgHeight = 500;
 var padding = 60;
 var barPad = 3;
 
 var bin_domain;
-var bin_size = 15;
+var bin_size = 25;
 
-var dataset_name = "data/sample-small.csv";
+var bar_shift1;
+var bar_shift2;
+var oldWidth;
+var oldHeight;
+var oldY;
+var inEvent;
+
+var dataset_name = "data/NYC_saf_noconsent_2019.csv";
 var default_attribute = "HistData";
 var default_attribute_type = "Num";
 
 var data;
+var curr_var_type = default_attribute_type;
+var curr_var = default_attribute;
 
 function setChartInfo(){
 
@@ -60,7 +69,12 @@ function makeCategoricalGraph(attr){
             .attr("x", function(d) {return x(d.key)+barPad; })
             .attr("y", function(d) {return y(d.value); })
             .attr("height", function(d) { return svgHeight - y(d.value) - padding; })
-            .attr("width", barWidth - 2*barPad);
+            .attr("width", barWidth - 2*barPad)
+            .style('transform-origin','bottom')
+            .style('transform','scale(1)')
+            .on("mouseover", mouseover)
+            .on("mouseout", mouseout)
+            .on('mousemove', mousemove);
 
     // add the x Axis
     svg.append("g")
@@ -84,20 +98,23 @@ function makeNumericalGraph(attr){
 
     //get the bin min and max
     var bin_domain = d3.extent(data, function(d) { return +d[attr]; });
+    var bin_data = data.map(function(d) {return +d[attr];});
 
     // set the x and y ranges
     var x = d3.scaleLinear()
         .domain([bin_domain[0],bin_domain[1]])
-        .rangeRound([padding, svgWidth-padding]); 
+        .range([padding, svgWidth-padding]); 
 
     // set the parameters for the histogram
     var histogram = d3.histogram()
-        .value(function(d) { return d[attr]; })
-        //.domain(bin_domain)
+        .value(function(d) { return d; })
         .domain(x.domain())
         .thresholds(x.ticks(bin_size));
+        //.thresholds(x.ticks(bin_size));
+    
+    var bins = histogram(bin_data);
 
-    var bins = histogram(data);
+    console.log(bin_size,bins);
 
     //getting the max and minimum of the data column
     y_domain = [0,d3.max(bins.map(function(d){ return d.length;}))];
@@ -116,25 +133,20 @@ function makeNumericalGraph(attr){
     d3.selectAll("rect").remove();
     d3.selectAll("g").remove();
 
-    console.log(bins.map(function(d){return d.length;}));
-    console.log(bins);
-
     //making the bar chart
     var barChart = svg.selectAll("rect")
         .data(bins)
         .enter()
             .append("rect")
             .attr("class","bar")
-            //.attr("x", 1)
             .attr("x", function(d) {return x(d.x0);})
             .attr("y", function(d) {return y(d.length);})
-            //.attr("transform", function(d) {
-            //    return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
             .attr("width", function(d) { return x(d.x1) - x(d.x0) - 1; })
             .attr("height", function(d) { return svgHeight - padding - y(d.length); })
-            .style('transform-origin','bottom')
-            .on("mouseover", mouseover)
-            .on("mouseout", mouseout);
+            .on('mousemove', mousemove)
+            .on('mousedown', mousedown);
+
+    setBarMouseFunc();
 
     // add the x Axis
     svg.append("g")
@@ -147,7 +159,7 @@ function makeNumericalGraph(attr){
         .call(d3.axisLeft(y));    
 
     // add a x Axis Title
-    svg.append("text")             
+    svg.append("g").append("text")             
         .attr("transform","translate(" + (svgWidth/2) + " ," + (svgHeight - 20) + ")")
         .style("text-anchor", "middle")
         .text("Values");
@@ -156,53 +168,129 @@ function makeNumericalGraph(attr){
 
 function mouseover(data,index){
 
-    var width = d3.select(this).attr('width')
-    var height = d3.select(this).attr('height')
+    oldHeight = d3.select(this).attr('height');
 
-    var scale = 1.2;
-    var scale_o = 0.8;
+    var newHeight = oldHeight * 1.05;
 
-    var newWidth = width * scale;
-    var newHeight = width * scale;
-    var newWidth_o = width * scale_o;
-    var newHeight_o = width * scale_o;
+    oldY = d3.select(this).attr('y');
 
-    var shift = (width - newWidth)/4;
-    var shift_o = (width - newWidth_o)/4;
+    d3.select(this)
+        .attr('class','hov_bar')
+        .attr('y',oldY - (newHeight - oldHeight))
+        .attr('height',newHeight)
+        .transition();
 
-    d3.select(this).attr('class','hov_bar');
 
-    /*d3.select(this)
-        .transition()
-        .style('transform','scale(' + scale + ')')
-        .style('transform','translateX(-' + shift + 'px)')
-        .style('transform','translateY(' + shift + 'px)');
+    //adding tool tip and value on graph
+    d3.select(".ToolTip")
+        .style("left", d3.event.pageX - 50 + "px")
+        .style("top", d3.event.pageY + 20 + "px")
+        .style("visibility", "visible")
+    
+    d3.select(this.parentNode)
+        .append("text")
+        .attr("id","hovertext")
+        .attr("x", parseInt(d3.select(this).attr("x")) + (d3.select(this).attr("width"))/2)
+        .attr("y", parseInt(d3.select(this).attr("y")) - 10)
+        .attr("text-anchor","middle");
 
-    d3.selectAll('.bar')
-        .filter((d,i)=> i < index)
-        .transition()
-        .style('transform','translateX(-' + shift + 'px)')
-        .style('transform','translateY(' + shift + 'px)')
-        .style('transform','scale(' + scale_o + ')');
+    if (curr_var_type == "Num"){
+        d3.select(".ToolTip").text("Bin Size: (" + (data.x0) + "," + (data.x1) + ")");
+        d3.select("#hovertext").text(data.length);
+    }
+    else{
+        d3.select(".ToolTip").text("Category: " + (data.key) );
+        d3.select("#hovertext").text(data.value);
+    }
 
-    d3.selectAll('.bar')
-        .filter((d,i)=> i > index)
-        .transition()
-        .style('transform','translateX(' + shift + 'px)')
-        .style('transform','translateY(' + shift + 'px)')
-        .style('transform','scale(' + scale_o + ')');*/
+    
 
 }
 
-function mouseout(data,index){
-    d3.select(this).attr('class','bar');
-    d3.select(this).transition().style('transform','scale(1)');
-    /*d3.selectAll('.bar')
-        .filter(d=>d.letter !== data.letter)
-        .transition()
-        .style('transform','translateX(0)')
-        .style('transform','translateY(0)')
-        .style('transform','scale(1)');*/
+function mousedown(){
+    var w = d3.select(window)
+        .on("mousemove", mousedownmove)
+        .on("mouseup", mouseup);
+
+    inEvent = true;
+    setBarMouseFunc();
+
+    var click_X = d3.event.pageX;
+    var pixLimit = 30;
+
+    
+    d3.select(".ToolTip")
+        .style("visibility", "hidden");
+
+    d3.select("#hovertext").remove();
+
+    function mousedownmove() {
+        if (bin_size < 100){
+            
+            
+            if (bin_size > 2){
+                var x = d3.event.pageX;
+
+                console.log(click_X,x,click_X - x,Math.floor(Math.abs((click_X - x)/pixLimit)),Math.floor((click_X - x)/pixLimit));
+
+                if(Math.floor(Math.abs((click_X - x)/pixLimit))!=0){
+                    console.log("enter");
+                    bin_size = bin_size - Math.floor((click_X - x)/pixLimit);
+                    makeNumericalGraph(curr_attr);
+                    click_X = d3.event.pageX;
+                }
+            
+            }
+            else{
+                bin_size = 3;
+            }   
+        }
+        else{
+            bin_size = 49;
+        }
+    }
+
+    function mouseup() {
+        w.on("mousemove", null)
+            .on("mouseup", null);
+
+        inEvent = false;
+        setBarMouseFunc()
+    }
+}
+
+function setBarMouseFunc(){
+    if(inEvent){        
+        d3.selectAll(".bar")
+            .on("mouseover", null)
+            .on("mouseout",null);
+    }
+    else{
+        d3.selectAll(".bar")
+            .on("mouseover", mouseover)
+            .on("mouseout",mouseout);
+    }
+}
+
+function mouseout(){
+
+    d3.select(this)
+        .attr('class','bar')
+        .attr('height', oldHeight)
+        .attr('y',oldY)
+        .transition();
+
+
+    d3.select(".ToolTip")
+        .style("visibility", "hidden");
+
+    d3.select("#hovertext").remove();
+}
+
+function mousemove(d) {
+    d3.select(".ToolTip")
+        .style("left", d3.event.pageX -50  + "px")
+        .style("top", d3.event.pageY + 20 + "px");
 }
 
 function makeCountDict(attr){
@@ -218,6 +306,11 @@ function makeCountDict(attr){
 
 function renderGraph(attr, category){
     
+    curr_var_type = category;
+    curr_attr = attr;
+
+    bin_size = 7;
+
     //hide-unhdide graph DOM according to the category selected and make the graph
     if(category == "Num"){
         d3.select("#graph-num").style("display","initial");
